@@ -33,6 +33,21 @@ describe Heuristics do
 		Heuristics.test(:external_lib_test, '23.09.85').must_equal :date
 	end
 	
+	it 'should return the assumption that first matched all conditions' do
+		require 'chronic'
+		Heuristics.define(:first_come_first_serve) do
+			assume_default nil # This is implicit anyway
+			
+			assume(:date) { condition { Chronic.parse(value) != nil } } 
+			assume(:integer_string) { condition { value =~ /\A\d+\Z/ } }
+			assume(:string) { condition { value.instance_of? String } } 
+		end
+
+		Heuristics.test(:first_come_first_serve, '23.09.85').must_equal :date
+		Heuristics.test(:first_come_first_serve, '27').must_equal :integer_string
+		Heuristics.test(:first_come_first_serve, 'This is string').must_equal :string
+	end
+	
 	it 'should return default if no assumptions are true' do
 		Heuristics.define(:default_test) { assume_default :string; assume(:email) { condition { false } } }
 		Heuristics.test(:default_test, 1).must_equal :string
