@@ -41,6 +41,9 @@ Or install it yourself as:
 
 ## Usage
 
+**NOTE**: Order matters. First assumption to return true for all conditions will be used.
+This means you should write your assumptions in the order from most specific to least specfic.
+
     # Creates a new heuristic named :field_tester
     Heuristics.define(:field_tester) do
     
@@ -66,11 +69,7 @@ Or install it yourself as:
     # First assumption to test true for all conditions will win
     # Returns :hash_with_values in this case
     Heuristics.test(:field_tester, {a: 1})
-    
-    
-    NOTE:
-    Order matters. First assumption to return true for all conditions will be used.
-    This means you should write your assumptions in the order from most specific to least specfic.
+
     
 ## Contributing
 
