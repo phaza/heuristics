@@ -3,13 +3,13 @@
 This gem allows you to define a set of conditions and test values against them.
 A typical simple example can look like this:
 
-    require 'chronic' # Excellent date lib to recognise dates
+    require 'chronic'
     Heuristics.define(:field_tester) do
     	assume_default :integer
-
-      assume(:string)	{ condition { value.instance_of? String } }
-      assume(:hash)		{ condition { value.instance_of? Hash } }
-      assume(:date)   { condition { Chronic.parse(value) != nil } }
+	
+    	assume(:date) { condition { Chronic.parse(value) } }
+    	assume(:string) { condition { value.instance_of? String } }
+    	assume(:hash) { condition { value.instance_of? Hash } } 
     end
 
 Then you can use it like this
@@ -47,9 +47,6 @@ Or install it yourself as:
       # Default value to return if no assumptions match
       assume_default :integer
 
-      # An assumption that will return :string if all conditions return true
-      assume(:string)	{ condition { value.instance_of? String } }
-
       # Assummption with multiple conditions. Returns :hash_with_values
       # if all conditions return true
       assume(:hash_with_values)		do
@@ -59,10 +56,14 @@ Or install it yourself as:
 
       # An assumption that will return :date if all conditions return true
       assume(:date) { condition { Chronic.parse(value) != nil } }
+      
+      # An assumption that will return :string if all conditions return true
+      assume(:string)	{ condition { value.instance_of? String } }
     end
     
     
     # Test a value against heuristic named :field_tester
+    # First assumption to test true for all conditions will win
     # Returns :hash_with_values in this case
     Heuristics.test(:field_tester, {a: 1})
 
