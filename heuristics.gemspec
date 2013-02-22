@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Heuristics::VERSION
   gem.authors       = ["Peter Haza"]
   gem.email         = ["peter.haza@gmail.com"]
-  gem.description   = %q{This gem allows you to define a set of conditions and test arrays and simple types against these conditions}
-  gem.summary       = %q{This gem allows you to define a set of conditions and test arrays and simple types against these conditions}
+  gem.description   = %q{This gem allows you to define a set of conditions and test values against them.}
+  gem.summary       = %q{This gem allows you to define a set of conditions and test values against them.}
   gem.homepage      = ""
 	
 	gem.add_development_dependency "rake"
