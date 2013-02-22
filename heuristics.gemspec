@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["peter.haza@gmail.com"]
   gem.description   = %q{This gem allows you to define a set of conditions and test values against them.}
   gem.summary       = %q{This gem allows you to define a set of conditions and test values against them.}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/phaza/heuristics"
 	
 	gem.add_development_dependency "rake"
 	gem.add_development_dependency "chronic"
