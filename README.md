@@ -1,6 +1,29 @@
 # Heuristics
 
-TODO: Write a gem description
+This gem allows you to define a set of conditions and test values against them.
+A typical simple example can look like this:
+
+    require 'chronic' # Excellent date lib to recognise dates
+    Heuristics.define(:field_tester) do
+    	assume_default :integer
+
+      assume(:string)	{ condition { value.instance_of? String } }
+    	assume(:hash)		{ condition { value.instance_of? Hash } }
+      assume(:date) { conditino { Chronic.parse(value) != nil } }
+    end
+
+Then you can use it like this
+
+    # Returns :string
+    Heuristics.test(:field_tester, 'abc')
+
+    # Returns :date
+    Heuristics.test(:field_tester, '23.09.1985')
+
+    # Falls back to :integer per assume_default. None of the other assumptions returned trus
+    Heuristics.test(:field_tester, [])
+
+
 
 ## Installation
 
@@ -18,7 +41,30 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    # Creates a new heuristic named :field_tester
+    Heuristics.define(:field_tester) do
+    
+      # Default value to return if no assumptions match
+      assume_default :integer
+
+      # An assumption that will return :string if all conditions return true
+      assume(:string)	{ condition { value.instance_of? String } }
+
+      # Assummption with multiple conditions. Returns :hash_with_values
+      # if all conditions return true
+      assume(:hash_with_values)		do
+        condition { value.instance_of? Hash }
+        condition { value.keys.size > 0 }
+      }
+
+      # An assumption that will return :date if all conditions return true
+      assume(:date) { conditino { Chronic.parse(value) != nil } }
+    end
+    
+    
+    # Test a value against heuristic named :field_tester
+    # Returns :hash_with_values in this case
+    Heuristics.test(:field_tester, {a: 1})
 
 ## Contributing
 
