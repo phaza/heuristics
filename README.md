@@ -8,8 +8,8 @@ A typical simple example can look like this:
     	assume_default :integer
 
       assume(:string)	{ condition { value.instance_of? String } }
-    	assume(:hash)		{ condition { value.instance_of? Hash } }
-      assume(:date) { conditino { Chronic.parse(value) != nil } }
+      assume(:hash)		{ condition { value.instance_of? Hash } }
+      assume(:date)   { condition { Chronic.parse(value) != nil } }
     end
 
 Then you can use it like this
@@ -58,7 +58,7 @@ Or install it yourself as:
       }
 
       # An assumption that will return :date if all conditions return true
-      assume(:date) { conditino { Chronic.parse(value) != nil } }
+      assume(:date) { condition { Chronic.parse(value) != nil } }
     end
     
     
