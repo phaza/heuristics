@@ -69,6 +69,19 @@ This means you should write your assumptions in the order from most specific to 
     # First assumption to test true for all conditions will win
     # Returns :hash_with_values in this case
     Heuristics.test(:field_tester, {a: 1})
+    
+**Test an array of value** (Also shows of using heuristic without a name):
+  Heuristics.define do
+    
+    # Default value to return if no assumptions match
+    assume_default :set
+
+    assume(:date) { condition { Chronic.parse(value) != nil } }
+    assume(:string)	{ condition { value.instance_of? String } } }
+    assume(:integer)	{ condition { value.instance_of? Fixnum } }} 
+  end
+    
+  Heuristics.test([1,2,3,'23.09.85','1','2','3','4']) # returns :string
 
     
 ## Contributing
