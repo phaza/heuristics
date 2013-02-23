@@ -1,10 +1,15 @@
 require_relative '../../test_helper'
 
-describe Heuristics do	
+describe Heuristics do
+	it 'should allow skipping the heuristics name' do
+		Heuristics.define { assume_default :string; assume(:email) { condition { false } } }
+		Heuristics.test(1).must_equal :string
+	end
+	
 	it 'should allow to use external libs for testing' do
 		require 'chronic'
 		Heuristics.define(:external_lib_test) { assume(:date) { condition { Chronic.parse(value) != nil } } }
-		Heuristics.test(:external_lib_test, '23.09.85').must_equal :date
+		Heuristics.test('23.09.85', :external_lib_test).must_equal :date
 	end
 	
 	it 'should return the assumption that first matched all conditions' do
@@ -17,19 +22,19 @@ describe Heuristics do
 			assume(:string) { condition { value.instance_of? String } } 
 		end
 
-		Heuristics.test(:first_come_first_serve, '23.09.85').must_equal :date
-		Heuristics.test(:first_come_first_serve, '27').must_equal :integer_string
-		Heuristics.test(:first_come_first_serve, 'This is string').must_equal :string
+		Heuristics.test('23.09.85', :first_come_first_serve).must_equal :date
+		Heuristics.test('27', :first_come_first_serve).must_equal :integer_string
+		Heuristics.test('This is string', :first_come_first_serve).must_equal :string
 	end
 	
 	it 'should return default if no assumptions are true' do
 		Heuristics.define(:default_test) { assume_default :string; assume(:email) { condition { false } } }
-		Heuristics.test(:default_test, 1).must_equal :string
+		Heuristics.test(1, :default_test).must_equal :string
 	end
 	
 	it 'should return nil if no default is set' do
 		Heuristics.define(:default_test2) { assume(:nothing) { condition { false } } }
-		Heuristics.test(:default_test2, 1).must_be :nil?
+		Heuristics.test(1, :default_test2).must_be :nil?
 	end
 	
 	it 'should return the first true assumption' do
@@ -38,12 +43,12 @@ describe Heuristics do
 			assume(:string)	{ condition { value.instance_of? String } }
 			assume(:hash)		{ condition { value.instance_of? String } }
 		end
-		Heuristics.test(:assumption_test, 'abc').must_equal :string
+		Heuristics.test('abc', :assumption_test).must_equal :string
 	end
 	
 	it 'should support complex types' do
 		Heuristics.define(:complex_test) { assume_default :integer; assume(:test) { condition { value[:hepp] } } }
-		Heuristics.test(:complex_test, Object.new).must_equal :integer
+		Heuristics.test(Object.new, :complex_test).must_equal :integer
 	end
 	
 	it 'should determine the most frequent type of an array' do
@@ -55,8 +60,8 @@ describe Heuristics do
 			assume(:integer) { condition { value.instance_of? Fixnum } }
 		end
 		
-		Heuristics.test(:array_test, [1,2,3,'a','b','c','d']).must_equal :string
-		Heuristics.test(:array_test, [1,2,'a','b','c','23.09.85','23.09.85','23.09.85','23.09.85']).must_equal :date
+		Heuristics.test([1,2,3,'a','b','c','d'], :array_test).must_equal :string
+		Heuristics.test([1,2,'a','b','c','23.09.85','23.09.85','23.09.85','23.09.85'], :array_test).must_equal :date
 	end
 	
 	it 'should raise an exception if trying to create a heuristic with a name that already exists ' do
