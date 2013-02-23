@@ -1,32 +1,6 @@
 require_relative '../../test_helper'
 
-describe Heuristics do
-	before do
-		# @default = Heuristics.define do
-		# 	
-		# 	assume_default :string
-		# 	
-		# 	assume :integer do
-		# 		condition { value =~ /\A\d+\Z/ }
-		# 	end
-		# 	
-		# 	assume :email do
-		# 		condition { value =~ /\A.*@.*\Z/}
-		# 	end
-		# 	
-		# 	assume :date_of_birth do
-		# 		require 'chronic'
-		# 		
-		# 		condition { Chronic.parse(value) }
-		# 	end
-		# 	
-		# 	assume :phone_number do
-		# 		condition { value.starts_with? '+353' } and
-		# 		condition { value.scan(/\d/).length > 5 }
-		# 	end
-		# end
-	end
-	
+describe Heuristics do	
 	it 'should allow to use external libs for testing' do
 		require 'chronic'
 		Heuristics.define(:external_lib_test) { assume(:date) { condition { Chronic.parse(value) != nil } } }
@@ -69,7 +43,20 @@ describe Heuristics do
 	
 	it 'should support complex types' do
 		Heuristics.define(:complex_test) { assume_default :integer; assume(:test) { condition { value[:hepp] } } }
-		Heuristics.test(:complex_test, []).must_equal :integer
+		Heuristics.test(:complex_test, Object.new).must_equal :integer
+	end
+	
+	it 'should determine the most frequent type of an array' do
+		require 'chronic'
+		
+		Heuristics.define(:array_test) do 
+			assume(:date) { condition { Chronic.parse(value) } }
+			assume(:string) { condition { value.instance_of? String } } 
+			assume(:integer) { condition { value.instance_of? Fixnum } }
+		end
+		
+		Heuristics.test(:array_test, [1,2,3,'a','b','c','d']).must_equal :string
+		Heuristics.test(:array_test, [1,2,'a','b','c','23.09.85','23.09.85','23.09.85','23.09.85']).must_equal :date
 	end
 	
 	it 'should raise an exception if trying to create a heuristic with a name that already exists ' do
