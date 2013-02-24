@@ -1,6 +1,5 @@
 require 'docile'
 require 'heuristics/builder'
-require 'heuristics/condition_evaluator'
 require 'heuristics/tester'
 require 'heuristics/version'
 

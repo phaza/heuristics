@@ -2,13 +2,13 @@ require_relative '../../test_helper'
 
 describe Heuristics do
 	it 'should allow skipping the heuristics name' do
-		Heuristics.define { assume_default :string; assume(:email) { condition { false } } }
+		Heuristics.define { assume_default :string; assume(:email) { false } }
 		Heuristics.test(1).must_equal :string
 	end
 	
 	it 'should allow to use external libs for testing' do
 		require 'chronic'
-		Heuristics.define(:external_lib_test) { assume(:date) { condition { Chronic.parse(value) != nil } } }
+		Heuristics.define(:external_lib_test) { assume(:date) { Chronic.parse(value) != nil } }
 		Heuristics.test('23.09.85', :external_lib_test).must_equal :date
 	end
 	
@@ -17,9 +17,9 @@ describe Heuristics do
 		Heuristics.define(:first_come_first_serve) do
 			assume_default nil # This is implicit anyway
 			
-			assume(:date) { condition { Chronic.parse(value) != nil } } 
-			assume(:integer_string) { condition { value =~ /\A\d+\Z/ } }
-			assume(:string) { condition { value.instance_of? String } } 
+			assume(:date) { Chronic.parse(value) != nil }
+			assume(:integer_string) { value =~ /\A\d+\Z/ }
+			assume(:string) { value.instance_of? String }
 		end
 
 		Heuristics.test('23.09.85', :first_come_first_serve).must_equal :date
@@ -40,8 +40,8 @@ describe Heuristics do
 	it 'should return the first true assumption' do
 		Heuristics.define(:assumption_test) do 
 			assume_default :integer
-			assume(:string)	{ condition { value.instance_of? String } }
-			assume(:hash)		{ condition { value.instance_of? String } }
+			assume(:string)	{ value.instance_of? String }
+			assume(:hash)		{ value.instance_of? Hash }
 		end
 		Heuristics.test('abc', :assumption_test).must_equal :string
 	end
@@ -55,9 +55,9 @@ describe Heuristics do
 		require 'chronic'
 		
 		Heuristics.define(:array_test) do 
-			assume(:date) { condition { Chronic.parse(value) } }
-			assume(:string) { condition { value.instance_of? String } } 
-			assume(:integer) { condition { value.instance_of? Fixnum } }
+			assume(:date) { Chronic.parse(value) }
+			assume(:string) { value.instance_of? String } 
+			assume(:integer) {  value.instance_of? Fixnum }
 		end
 		
 		Heuristics.test([1,2,3,'a','b','c','d'], :array_test).must_equal :string

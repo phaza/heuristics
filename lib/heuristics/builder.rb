@@ -1,14 +1,24 @@
+require 'ostruct'
+
 module Heuristics
 	class Builder
-		attr_reader :tests, :default
+		attr_reader :assumptions, :default
 		
 		def initialize
-			@tests = {}
+			@assumptions = {}
 		end
 		
 		def assume(type, &block)
-			raise "An assumption with the name '#{type}' already exists" unless @tests[type].nil?
-			@tests[type] = Docile.dsl_eval(ConditionEvaluator.new, &block)
+			raise "An assumption with the name '#{type}' already exists" unless @assumptions[type].nil?
+			@assumptions[type] = Proc.new(&block)
+		end
+		
+		def check(value)
+			context = OpenStruct.new(value: value)
+			
+			@assumptions.map do |type, prok|
+				(context.instance_eval(&prok) ? type : default) rescue default
+			end.reject(&:nil?).first
 		end
 		
 		def assume_default(type)

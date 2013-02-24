@@ -2,7 +2,7 @@ require_relative '../../test_helper'
 
 describe Heuristics::Builder do
   it 'should respond to #tests' do
-		Heuristics::Builder.new.must_respond_to :tests
+		Heuristics::Builder.new.must_respond_to :assumptions
   end
 	
 	it 'must allow setting a default assumption' do

@@ -7,9 +7,9 @@ A typical simple example can look like this:
     Heuristics.define(:field_tester) do
     	assume_default :integer
 	
-    	assume(:date) { condition { Chronic.parse(value) } }
-    	assume(:string) { condition { value.instance_of? String } }
-    	assume(:hash) { condition { value.instance_of? Hash } } 
+    	assume(:date) { Chronic.parse(value) }
+    	assume(:string) { value.instance_of? String }
+    	assume(:hash) { value.instance_of? Hash } 
     end
 
 Then you can use it like this
@@ -19,10 +19,6 @@ Then you can use it like this
 
     # Returns :date
     Heuristics.test(:field_tester, '23.09.1985')
-
-    # Falls back to :integer per assume_default. None of the other assumptions returned trus
-    Heuristics.test(:field_tester, [])
-
 
 
 ## Installation
@@ -52,16 +48,16 @@ This means you should write your assumptions in the order from most specific to 
 
       # Assummption with multiple conditions. Returns :hash_with_values
       # if all conditions return true
-      assume(:hash_with_values)		do
-        condition { value.instance_of? Hash }
-        condition { value.keys.size > 0 }
+      assume(:hash_with_values) do
+        value.instance_of? Hash
+        value.keys.size > 0
       }
 
       # An assumption that will return :date if all conditions return true
-      assume(:date) { condition { Chronic.parse(value) != nil } }
+      assume(:date) { Chronic.parse(value) != nil }
       
       # An assumption that will return :string if all conditions return true
-      assume(:string)	{ condition { value.instance_of? String } }
+      assume(:string) { value.instance_of? String }
     end
     
     
@@ -76,9 +72,9 @@ This means you should write your assumptions in the order from most specific to 
     # Default value to return if no assumptions match
     assume_default :set
 
-    assume(:date) { condition { Chronic.parse(value) != nil } }
-    assume(:string)	{ condition { value.instance_of? String } } }
-    assume(:integer)	{ condition { value.instance_of? Fixnum } }} 
+    assume(:date) { Chronic.parse(value) != nil }
+    assume(:string) { value.instance_of? String }
+    assume(:integer) { value.instance_of? Fixnum }
   end
     
   Heuristics.test([1,2,3,'23.09.85','1','2','3','4']) # returns :string

@@ -7,7 +7,7 @@ module Heuristics
 		def test(value)
 			freq = Frequency.new
 			[*value].map do |v|
-				freq.add(@builder.tests.map{|k, e| e.check(v) ? k : nil }.reject(&:nil?).first || @builder.default)
+				freq.add(@builder.check(v) || @builder.default)
 			end
 			
 			freq.list.keys.first
