@@ -9,7 +9,7 @@ describe Heuristics do
 	it 'should allow to use external libs for testing' do
 		require 'chronic'
 		Heuristics.define(:external_lib_test) { assume(:date) { Chronic.parse(value) != nil } }
-		Heuristics.test('23.09.85', :external_lib_test).must_equal :date
+		Heuristics.test('23/09/1985', :external_lib_test).must_equal :date
 	end
 	
 	it 'should return the assumption that first matched all conditions' do
@@ -22,7 +22,7 @@ describe Heuristics do
 			assume(:string) { value.instance_of? String }
 		end
 
-		Heuristics.test('23.09.85', :first_come_first_serve).must_equal :date
+		Heuristics.test('23/09/1985', :first_come_first_serve).must_equal :date
 		Heuristics.test('27', :first_come_first_serve).must_equal :integer_string
 		Heuristics.test('This is string', :first_come_first_serve).must_equal :string
 	end
@@ -61,7 +61,7 @@ describe Heuristics do
 		end
 		
 		Heuristics.test([1,2,3,'a','b','c','d'], :array_test).must_equal :string
-		Heuristics.test([1,2,'a','b','c','23.09.85','23.09.85','23.09.85','23.09.85'], :array_test).must_equal :date
+		Heuristics.test([1,2,'a','b','c','23/09/1985','23/09/1985','23/09/1985','23/09/1985'], :array_test).must_equal :date
 	end
 	
 	it 'should raise an exception if trying to create a heuristic with a name that already exists ' do

@@ -18,7 +18,7 @@ Then you can use it like this
     Heuristics.test(:field_tester, 'abc')
 
     # Returns :date
-    Heuristics.test(:field_tester, '23.09.1985')
+    Heuristics.test(:field_tester, '23/09/1985')
 
 
 ## Installation
@@ -77,7 +77,7 @@ This means you should write your assumptions in the order from most specific to 
     assume(:integer) { value.instance_of? Fixnum }
   end
     
-  Heuristics.test([1,2,3,'23.09.85','1','2','3','4']) # returns :string
+  Heuristics.test([1,2,3,'23/09/1985','1','2','3','4']) # returns :string
 
     
 ## Contributing
