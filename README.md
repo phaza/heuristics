@@ -1,3 +1,5 @@
+# THIS GEM IS NO LONGER MAINTAINED. SORRY!
+
 # Heuristics
 
 This gem allows you to define a set of conditions and test values against them.
